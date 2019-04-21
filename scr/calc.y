@@ -43,7 +43,14 @@ EXPRESSAO:
 
 		| EXPRESSAO MENOS EXPRESSAO{
 			$$ = $1 - $3;
-			printf("MOV R1, #%d\nMOV R2, #%d\nSUB R0, R1, R2\n", $1, $3);
+			printf("%d - %d = %d\n", $1, $3, $$);
+			if(primeiro){
+				printf("MOV R1, #%d\nPUSH R1\nPOPALL\nSUB R0, R0, R1\nPUSH R0\n",$3);
+			}
+			else {
+				printf("MOV R0, #0\nMOV R1, #%d\nADD R0, R0, R1\nPUSH R0\nMOV R1, #%d\nPUSH R1\nPOPALL\nSUB R0, R0, R1\nPUSH R0\n", $1, $2);
+				primeiro = 1;
+			}
 		}
 
 

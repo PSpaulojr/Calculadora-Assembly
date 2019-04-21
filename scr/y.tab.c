@@ -1247,13 +1247,20 @@ yyreduce:
 #line 44 "calc.y" /* yacc.c:1646  */
     {
 			(yyval) = (yyvsp[-2]) - (yyvsp[0]);
-			printf("MOV R1, #%d\nMOV R2, #%d\nSUB R0, R1, R2\n", (yyvsp[-2]), (yyvsp[0]));
+			printf("%d - %d = %d\n", (yyvsp[-2]), (yyvsp[0]), (yyval));
+			if(primeiro){
+				printf("MOV R1, #%d\nPUSH R1\nPOPALL\nSUB R0, R0, R1\nPUSH R0\n",(yyvsp[0]));
+			}
+			else {
+				printf("MOV R0, #0\nMOV R1, #%d\nADD R0, R0, R1\nPUSH R0\nMOV R1, #%d\nPUSH R1\nPOPALL\nSUB R0, R0, R1\nPUSH R0\n", (yyvsp[-2]), (yyvsp[-1]));
+				primeiro = 1;
+			}
 		}
-#line 1253 "y.tab.c" /* yacc.c:1646  */
+#line 1260 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1257 "y.tab.c" /* yacc.c:1646  */
+#line 1264 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1481,7 +1488,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 50 "calc.y" /* yacc.c:1906  */
+#line 57 "calc.y" /* yacc.c:1906  */
 
 
 void yyerror(char *c){
