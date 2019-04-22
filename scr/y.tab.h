@@ -49,7 +49,9 @@ extern int yydebug;
     MULTI = 259,
     SOMA = 260,
     MENOS = 261,
-    EOL = 262
+    EOL = 262,
+    OPARENT = 263,
+    CPARENT = 264
   };
 #endif
 /* Tokens.  */
@@ -58,6 +60,8 @@ extern int yydebug;
 #define SOMA 260
 #define MENOS 261
 #define EOL 262
+#define OPARENT 263
+#define CPARENT 264
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

@@ -16,6 +16,10 @@ void yyerror(char *c);
 	return NUMERO;
 }
 
+[(] { return OPARENT;}
+
+[)] { return CPARENT; }
+
 [*] { return MULTI; }
 
 [+] { return SOMA; }
