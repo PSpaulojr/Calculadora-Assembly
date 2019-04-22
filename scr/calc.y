@@ -11,6 +11,8 @@ int primeiro = 0;
 %left SOMA
 %left MENOS
 %left MULTI
+%left CPARENT
+%left OPARENT
 
 %%
 
@@ -21,32 +23,37 @@ PROGRAMA:
 
 EXPRESSAO:
 		NUMERO{
+			printf("numero: %d\n", $$);
 			$$ = $1;
+			if (primeiro){
+				printf("MOV R1, #%d\n", $$);
+			}
+			else{
+				primeiro = 1;
+				printf("MOV R0, #0\nMOV R1, #%d\nADD R0,R0,R1\n", $$);
+			}
 		}
+
 		| OPARENT EXPRESSAO CPARENT{
 			$$ = $2;
-			printf("Parênteses: %d", $2);
+		/*	printf("Parênteses: %d\n", $2); */
 		}
+
 		| EXPRESSAO MULTI EXPRESSAO{
 			$$ = $1 * $3;
-			printf("%d * %d = %d\n", $1, $3, $$);
+		/*	printf("%d * %d = %d\n", $1, $3, $$); */
 		}
 
 		| EXPRESSAO SOMA EXPRESSAO{
 			$$ = $1 + $3;
-			printf("%d + %d = %d\n", $1, $3, $$);
-			if (primeiro){
-				printf("MOV R1, #%d\nADD R0, R0, R1\n", $3);
-			}
-			else{
-				primeiro = 1;
-				printf("MOV R0, #0\nMOV R1, #%d\nADD R0,R0,R1\nMOV R1, #%d\nADD R0,R0,R1\n",$1,$3);
-			}
+		/*	printf("%d + %d = %d\n", $1, $3, $$); */
+			printf("ADD R0, R0, R1\n");
 		}
 
 		| EXPRESSAO MENOS EXPRESSAO{
 			$$ = $1 - $3;
-			printf("%d - %d = %d\n", $1, $3, $$);
+		/*	printf("%d - %d = %d\n", $1, $3, $$); */
+			printf("SUB R0, R0, R1\n");
 		}
 
 

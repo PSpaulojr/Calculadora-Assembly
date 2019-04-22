@@ -438,7 +438,7 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    18,    18,    19,    23,    26,    29,    34,    46
+       0,    20,    20,    21,    25,    37,    42,    47,    53
 };
 #endif
 
@@ -1211,63 +1211,67 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 18 "calc.y" /* yacc.c:1646  */
+#line 20 "calc.y" /* yacc.c:1646  */
     { printf("Resultado: %d\n", (yyvsp[-1])); }
 #line 1217 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 23 "calc.y" /* yacc.c:1646  */
+#line 25 "calc.y" /* yacc.c:1646  */
     {
+			printf("numero: %d\n", (yyval));
 			(yyval) = (yyvsp[0]);
-		}
-#line 1225 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 5:
-#line 26 "calc.y" /* yacc.c:1646  */
-    {
-			(yyval) = (yyvsp[-1]);
+			if (primeiro){
+				printf("MOV R1, #%d\n", (yyval));
+			}
+			else{
+				primeiro = 1;
+				printf("MOV R0, #0\nMOV R1, #%d\nADD R0,R0,R1\n", (yyval));
+			}
 		}
 #line 1233 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 6:
-#line 29 "calc.y" /* yacc.c:1646  */
+  case 5:
+#line 37 "calc.y" /* yacc.c:1646  */
     {
-			(yyval) = (yyvsp[-2]) * (yyvsp[0]);
-			printf("%d * %d = %d\n", (yyvsp[-2]), (yyvsp[0]), (yyval));
+			(yyval) = (yyvsp[-1]);
+		/*	printf("Parênteses: %d\n", $2); */
 		}
 #line 1242 "y.tab.c" /* yacc.c:1646  */
     break;
 
+  case 6:
+#line 42 "calc.y" /* yacc.c:1646  */
+    {
+			(yyval) = (yyvsp[-2]) * (yyvsp[0]);
+		/*	printf("%d * %d = %d\n", $1, $3, $$); */
+		}
+#line 1251 "y.tab.c" /* yacc.c:1646  */
+    break;
+
   case 7:
-#line 34 "calc.y" /* yacc.c:1646  */
+#line 47 "calc.y" /* yacc.c:1646  */
     {
 			(yyval) = (yyvsp[-2]) + (yyvsp[0]);
-			printf("%d + %d = %d\n", (yyvsp[-2]), (yyvsp[0]), (yyval));
-			if (primeiro){
-				printf("MOV R1, #%d\nADD R0, R0, R1\n", (yyvsp[0]));
-			}
-			else{
-				primeiro = 1;
-				printf("MOV R0, #0\nMOV R1, #%d\nADD R0,R0,R1\nMOV R1, #%d\nADD R0,R0,R1\n",(yyvsp[-2]),(yyvsp[0]));
-			}
+		/*	printf("%d + %d = %d\n", $1, $3, $$); */
+			printf("ADD R0, R0, R1\n");
 		}
-#line 1258 "y.tab.c" /* yacc.c:1646  */
+#line 1261 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 46 "calc.y" /* yacc.c:1646  */
+#line 53 "calc.y" /* yacc.c:1646  */
     {
 			(yyval) = (yyvsp[-2]) - (yyvsp[0]);
-			printf("%d - %d = %d\n", (yyvsp[-2]), (yyvsp[0]), (yyval));
+		/*	printf("%d - %d = %d\n", $1, $3, $$); */
+			printf("SUB R0, R0, R1\n");
 		}
-#line 1267 "y.tab.c" /* yacc.c:1646  */
+#line 1271 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1271 "y.tab.c" /* yacc.c:1646  */
+#line 1275 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1495,7 +1499,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 52 "calc.y" /* yacc.c:1906  */
+#line 60 "calc.y" /* yacc.c:1906  */
 
 
 void yyerror(char *c){
