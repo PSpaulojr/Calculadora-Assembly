@@ -70,8 +70,9 @@ void yyerror(char *c);
 int yylex(void);
 
 int primeiro = 0;
+int multiplicou = 0;
 
-#line 75 "y.tab.c" /* yacc.c:339  */
+#line 76 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -140,7 +141,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 144 "y.tab.c" /* yacc.c:358  */
+#line 145 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -438,7 +439,7 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    20,    20,    21,    25,    37,    42,    47,    53
+       0,    21,    21,    26,    30,    42,    47,    54,    60
 };
 #endif
 
@@ -1211,13 +1212,17 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 20 "calc.y" /* yacc.c:1646  */
-    { printf("Resultado: %d\n", (yyvsp[-1])); }
-#line 1217 "y.tab.c" /* yacc.c:1646  */
+#line 21 "calc.y" /* yacc.c:1646  */
+    { 
+			printf("Resultado: %d\n", (yyvsp[-1]));
+			printf("end\n");
+			multiplicou = 0;
+			}
+#line 1222 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 25 "calc.y" /* yacc.c:1646  */
+#line 30 "calc.y" /* yacc.c:1646  */
     {
 			printf("numero: %d\n", (yyval));
 			(yyval) = (yyvsp[0]);
@@ -1229,49 +1234,51 @@ yyreduce:
 				printf("MOV R0, #0\nMOV R1, #%d\nADD R0,R0,R1\n", (yyval));
 			}
 		}
-#line 1233 "y.tab.c" /* yacc.c:1646  */
+#line 1238 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 37 "calc.y" /* yacc.c:1646  */
+#line 42 "calc.y" /* yacc.c:1646  */
     {
 			(yyval) = (yyvsp[-1]);
 		/*	printf("Parênteses: %d\n", $2); */
 		}
-#line 1242 "y.tab.c" /* yacc.c:1646  */
+#line 1247 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 42 "calc.y" /* yacc.c:1646  */
+#line 47 "calc.y" /* yacc.c:1646  */
     {
 			(yyval) = (yyvsp[-2]) * (yyvsp[0]);
 		/*	printf("%d * %d = %d\n", $1, $3, $$); */
+		printf("SUB R1, R1, #1\nMOV R2, R0\nBL SOMA%d\nB fim%d\nSOMA%d ADD R0,R0,R2\nSUB R1, R1, #1\nCMP R1, #0\nBNE SOMA%d\nMOV PC,LR\nfim%d\n", multiplicou, multiplicou, multiplicou, multiplicou, multiplicou);
+		multiplicou ++;
 		}
-#line 1251 "y.tab.c" /* yacc.c:1646  */
+#line 1258 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 47 "calc.y" /* yacc.c:1646  */
+#line 54 "calc.y" /* yacc.c:1646  */
     {
 			(yyval) = (yyvsp[-2]) + (yyvsp[0]);
 		/*	printf("%d + %d = %d\n", $1, $3, $$); */
 			printf("ADD R0, R0, R1\n");
 		}
-#line 1261 "y.tab.c" /* yacc.c:1646  */
+#line 1268 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 53 "calc.y" /* yacc.c:1646  */
+#line 60 "calc.y" /* yacc.c:1646  */
     {
 			(yyval) = (yyvsp[-2]) - (yyvsp[0]);
 		/*	printf("%d - %d = %d\n", $1, $3, $$); */
 			printf("SUB R0, R0, R1\n");
 		}
-#line 1271 "y.tab.c" /* yacc.c:1646  */
+#line 1278 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1275 "y.tab.c" /* yacc.c:1646  */
+#line 1282 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1499,7 +1506,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 60 "calc.y" /* yacc.c:1906  */
+#line 67 "calc.y" /* yacc.c:1906  */
 
 
 void yyerror(char *c){
