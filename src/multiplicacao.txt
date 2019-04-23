@@ -1,0 +1,15 @@
+		MOV		R0, #0
+		MOV		R1, #9
+		ADD		R0,R0,R1
+		MOV		R1, #5
+		SUB		R1, R1, #1
+		MOV		R2, R0
+		BL		SOMA0
+		B		fim0
+SOMA0	ADD		R0,R0,R2
+		SUB		R1, R1, #1
+		CMP		R1, #0
+		BNE		SOMA0
+		MOV		PC,LR
+fim0
+		end
