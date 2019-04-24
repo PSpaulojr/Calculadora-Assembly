@@ -11,10 +11,7 @@ void yyerror(char *c);
 
 %%
 
-[0-9]+ {
-	yylval = atoi(yytext);
-	return NUMERO;
-}
+[-] { return MENOS; }
 
 [(] { return OPARENT;}
 
@@ -24,7 +21,11 @@ void yyerror(char *c);
 
 [+] { return SOMA; }
 
-[-] { return MENOS; }
+[0-9]+ {
+	yylval = atoi(yytext);
+	return NUMERO;
+}
+
 
 \n {return EOL; }
 
