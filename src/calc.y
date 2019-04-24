@@ -10,8 +10,9 @@ int negativo = 0;
 %token NUMERO MULTI SOMA MENOS EOL OPARENT CPARENT
 %left SOMA MENOS
 %left MULTI
-%left CPARENT
 %left OPARENT
+%left CPARENT
+
 
 %%
 
@@ -71,7 +72,7 @@ EXPRESSAO:
 					negativo = 0;
 				}
 				else{
-					if( $1*1 < 0){
+					if( ($1 < 0) && ($3 < 0) ){
 						printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nMVN R2, R2\nADD R2, R2, #1\nMVN R1, R1\nADD R1, R1, #1\nMOV R3, #0\nBL SOMA\n\n");
 					}
 					else{
@@ -85,7 +86,7 @@ EXPRESSAO:
 					negativo = 0;
 				}
 				else{
-					if( $1*1 < 0){
+					if( ($1 < 0) && ($3 < 0) ){
 						printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nMVN R2, R2\nADD R2, R2, #1\nMVN R1, R1\nADD R1, R1, #1\nBL SOMA\nB fim\n\nSOMA ADD R3,R3,R2\nSUB R1, R1, #1\nCMP R1, #0\nBNE SOMA\nSTR R3,[SP, #4]!\nMOV PC,LR\nfim\n\n");
 					}
 					else{
