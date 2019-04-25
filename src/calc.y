@@ -4,7 +4,6 @@ void yyerror(char *c);
 int yylex(void);
 int primeiro = 0;
 int multiplicou = 0;
-int negativo = 0;
 %}
 
 %token NUMERO MULTI SOMA MENOS EOL OPARENT CPARENT
@@ -55,46 +54,14 @@ EXPRESSAO:
 
 		| EXPRESSAO MULTI EXPRESSAO{
 			$$ = $1 * $3;
-			if( $1*$3 < 0 ){
-				if( ($1 < 0) && ($3<0) ){
-					$1 = $1*(-1);
-					$3 = $3*(-1);
-					$$ = $1 * $3;
-				}
-				else if( $1 > $3 ) {
-					negativo++ ;
-				}
-			}
-			
+
 			if(multiplicou){
-				if(negativo){
-					printf("LDR R2, [SP], #-4\nLDR R1, [SP], #-4\nMOV R3, #0\nBL SOMA\n\n");
-					negativo = 0;
-				}
-				else{
-					if( ($1 < 0) && ($3 < 0) ){
-						printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nMVN R2, R2\nADD R2, R2, #1\nMVN R1, R1\nADD R1, R1, #1\nMOV R3, #0\nBL SOMA\n\n");
-					}
-					else{
-						printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nMOV R3, #0\nBL SOMA\n\n");
-					}
-				}
+				printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nMOV R3, #0X80000000\nAND R3, R3, R1\nCMP R3, #0X80000000\nBEQ NEGATIVO1%d\nB SOMA1%d\nNEGATIVO1%d BL NEGATIVO11\nSOMA1%d BL SOMA\n\n", multiplicou+1, multiplicou+1, multiplicou+1, multiplicou+1);
 			}
 			else{
-				if(negativo){
-					printf("LDR R2, [SP], #-4\nLDR R1, [SP], #-4\nBL SOMA\nB fim\n\nSOMA ADD R3,R3,R2\nSUB R1, R1, #1\nCMP R1, #0\nBNE SOMA\nSTR R3,[SP, #4]!\nMOV PC,LR\nfim\n\n");
-					negativo = 0;
-				}
-				else{
-					if( ($1 < 0) && ($3 < 0) ){
-						printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nMVN R2, R2\nADD R2, R2, #1\nMVN R1, R1\nADD R1, R1, #1\nBL SOMA\nB fim\n\nSOMA ADD R3,R3,R2\nSUB R1, R1, #1\nCMP R1, #0\nBNE SOMA\nSTR R3,[SP, #4]!\nMOV PC,LR\nfim\n\n");
-					}
-					else{
-						printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nBL SOMA\nB fim\n\nSOMA ADD R3,R3,R2\nSUB R1, R1, #1\nCMP R1, #0\nBNE SOMA\nSTR R3,[SP, #4]!\nMOV PC,LR\nfim\n\n");
-					}
-				}
-				multiplicou ++;
+				printf("LDR R1, [SP], #-4\nLDR R2, [SP], #-4\nMOV R3, #0X80000000\nAND R3, R3, R1\nCMP R3, #0X80000000\nBEQ NEGATIVO1\nB SOMA2\nNEGATIVO1 BL NEGATIVO11\nSOMA2 BL SOMA\nB fim\n\nNEGATIVO11 MOV R3, #0X80000000\nAND R3, R3, R2\nCMP R3, #0X80000000\nBEQ NEGATIVO2\nBNE NEGATIVO111\nRETORNEI MOV PC,LR\nNEGATIVO2 B NEGATIVO22\n\nNEGATIVO111 MOV R3, R1\nMOV R1, R2\nMOV R2, R3\nMOV R3, #0\nB RETORNEI\n\nNEGATIVO22 MVN R1, R1\n ADD R1, R1, #1\nMVN R2, R2\nADD R2, R2, #1\nMOV R3, #0\nB RETORNEI\n\nSOMA ADD R3,R3,R2\nSUB R1, R1, #1\nCMP R1, #0\nBNE SOMA\nSTR R3,[SP, #4]!\nMOV PC,LR\nfim\n\n");
 			}
+				multiplicou ++;
 		}
 
 		| EXPRESSAO SOMA EXPRESSAO{
